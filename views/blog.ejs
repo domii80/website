@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+
+<h1>Blog</h1>
+<div class="post-list">
+  <% posts.forEach(post => { %>
+  <article class="post-summary">
+    <a href="/blog/<%= post.id %>"><h2><%= post.title %></h2></a>
+    <time><%= post.created_at %></time>
+    <p><%= post.excerpt %></p>
+    <a href="/blog/<%= post.id %>" class="read-more">Read more &rarr;</a>
+  </article>
+  <% }) %>
+</div>
+
+<%- include('partials/footer') %>

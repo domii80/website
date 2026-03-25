@@ -1,0 +1,183 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f8fc;
+  --surface: #ffffff;
+  --primary: #3b6fd4;
+  --primary-dark: #2a55b0;
+  --text: #1e2330;
+  --muted: #6b7280;
+  --border: #e2e6f0;
+  --radius: 10px;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Header */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+nav a:hover { color: var(--primary); }
+
+/* Main */
+main {
+  flex: 1;
+  padding: 3rem 1.5rem;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 4rem 0 3rem;
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.6rem 1.4rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.btn:hover { background: var(--primary-dark); }
+
+.btn.outline {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  margin-top: 1rem;
+}
+
+.btn.outline:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Recent posts */
+.recent h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(59,111,212,0.12);
+  transform: translateY(-2px);
+}
+
+.card h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+.card time { font-size: 0.8rem; color: var(--muted); display: block; margin-bottom: 0.6rem; }
+.card p { font-size: 0.9rem; color: var(--muted); }
+
+/* Blog list */
+h1 { font-size: 2rem; margin-bottom: 2rem; }
+
+.post-list { display: flex; flex-direction: column; gap: 2rem; }
+
+.post-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+}
+
+.post-summary a { text-decoration: none; color: var(--text); }
+.post-summary h2 { font-size: 1.3rem; margin-bottom: 0.3rem; transition: color 0.2s; }
+.post-summary a:hover h2 { color: var(--primary); }
+.post-summary time { font-size: 0.82rem; color: var(--muted); display: block; margin-bottom: 0.75rem; }
+.post-summary p { color: var(--muted); margin-bottom: 0.75rem; }
+
+.read-more { color: var(--primary); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+.read-more:hover { text-decoration: underline; }
+
+/* Single post */
+.post { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; }
+
+.post-header { margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
+.post-header h1 { font-size: 1.9rem; margin-bottom: 0.4rem; }
+.post-header time { color: var(--muted); font-size: 0.85rem; }
+
+.post-body { font-size: 1.05rem; line-height: 1.85; color: #2d3340; margin-bottom: 2rem; }
+
+/* Footer */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}

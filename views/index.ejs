@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <h1>Welcome to noetel.info</h1>
+  <p>A place to write about computer networking and technology.</p>
+  <a href="/blog" class="btn">Read the Blog</a>
+</section>
+
+<section class="recent">
+  <h2>Recent Posts</h2>
+  <div class="card-grid">
+    <% posts.forEach(post => { %>
+    <a href="/blog/<%= post.id %>" class="card">
+      <h3><%= post.title %></h3>
+      <time><%= post.created_at %></time>
+      <p><%= post.excerpt %></p>
+    </a>
+    <% }) %>
+  </div>
+  <a href="/blog" class="btn outline">All Posts</a>
+</section>
+
+<%- include('partials/footer') %>
