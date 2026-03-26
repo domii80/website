@@ -6,7 +6,7 @@
     <time><%= post.created_at %></time>
   </header>
   <div class="post-body">
-    <%- post.body.replace(/\n/g, '<br>') %>
+    <%= post.body %>
   </div>
   <a href="/blog" class="btn outline">&larr; Back to Blog</a>
 </article>
