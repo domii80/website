@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Leak - Anthropic 2026</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #d35400;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background-color: #fff3e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* =========================================
+           PRINT STYLES (DIN A4 Optimierung)
+           ========================================= */
+        @media print {
+            @page {
+                size: A4;
+                margin: 2cm;
+            }
+
+            body {
+                background-color: white;
+                padding: 0;
+                font-size: 11pt; /* Bessere Lesbarkeit auf Papier */
+                color: black;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            header {
+                border-bottom: 1px solid black;
+            }
+
+            h1, h2, h3 {
+                color: black;
+                page-break-after: avoid;
+            }
+
+            h2 {
+                border-left: 4px solid #666;
+            }
+
+            /* Verhindert Seitenumbrüche innerhalb wichtiger Blöcke */
+            p, li, tr, .grid-container {
+                page-break-inside: avoid;
+            }
+
+            table {
+                border: 1px solid black;
+            }
+
+            th {
+                background-color: #eee;
+                color: black;
+                border-bottom: 2px solid black;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+            }
+
+            .highlight {
+                background-color: transparent;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Erkenntnisse aus dem Claude Code Leak</h1>
+        <p class="subtitle">Analyse der Agentic Harness von Anthropic (März 2026)</p>
+    </header>
+
+    <section>
+        <h2>Einführung</h2>
+        <p>Am 31. März 2026 wurde durch einen Verpackungsfehler bei einem npm-Release versehentlich der Quellcode von <strong>Claude Code</strong> geleakt. Dabei handelte es sich nicht um die neuronalen Gewichte des LLMs, sondern um über 512.000 Zeilen TypeScript-Code der sogenannten <span class="highlight">Agentic Harness</span> – dem Programmgerüst, das das Sprachmodell umhüllt und es zu einem autonomen Agenten im Terminal macht.</p>
+    </section>
+
+    <div class="grid-container">
+        <section>
+            <h2>⚙️ Prozesse: Wie das LLM zum Agenten wird</h2>
+            <ul>
+                <li><strong>Tool-Orchestrierung & MCP-Server:</strong> Ein Arsenal von über 40 spezialisierten Werkzeugen (z.B. BashTool). Das LLM generiert strukturierte Aufrufe, die in der lokalen Bun-Laufzeitumgebung ausgeführt und in den Kontext zurückgespeist werden.</li>
+                <li><strong>Projekt „KAIROS“ (Proaktive Beobachtung):</strong> Ein unveröffentlichter Hintergrundprozess, der Code- und Dateiänderungen asynchron beobachtet. Er ermöglicht dem Agenten, unaufgefordert aktiv zu werden (z.B. über PushNotifications).</li>
+                <li><strong>Speicherkonsolidierung („Dream“):</strong> Ein Hintergrund-Job, der lange Terminal-Historien zusammenfasst, Kernlogik extrahiert und veraltete Informationen in ein kompaktes Langzeitgedächtnis komprimiert, um das Kontextfenster zu schonen.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🛡️ Sicherheitsleitplanken & Guardrails</h2>
+            <ul>
+                <li><strong>Berechtigungs-Ebenen (Permission Approvals):</strong> Das LLM agiert nicht mit uneingeschränkten Root-Rechten. Kritische Aktionen (Dateilöschungen, Systemkonfigurationen) erfordern eine hartcodierte menschliche Bestätigung (y/n) im Terminal.</li>
+                <li><strong>Identitätsschutz („Undercover Mode“):</strong> Ein dynamischer System-Prompt-Filter für öffentliche Repositories. Er verhindert streng, dass das LLM interne Anthropic-Codenamen, Slack-Kanäle oder unveröffentlichte Versionen in Commits leakt.</li>
+                <li><strong>Client-Verifizierung (Anti-Theft):</strong> Um Session-Token-Diebstahl zu verhindern, wird kryptografisch validiert, ob API-Anfragen an Anthropic von der echten, unveränderten CLI-Umgebung stammen.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>📊 Unterstützende UX- & Telemetrie-Maßnahmen</h2>
+            <ul>
+                <li><strong>Frustrations-Metriken (Das „F*cks“-Chart):</strong> Das System misst die Entwickler-Erfahrung anhand von Terminal-Eingaben. Fluchwörter oder ständiges Eintippen von „continue“ werden als Frustration gewertet und erzwingen einen Strategiewechsel der KI.</li>
+                <li><strong>Gamification („Buddy“-System / Tamagotchi):</strong> Ein prozedural generiertes ASCII-Haustier, dessen Status mit dem Programmierfortschritt und erfolgreichen Builds gekoppelt ist, um die Arbeit im Terminal aufzulockern.</li>
+            </ul>
+        </section>
+    </div>
+
+    <section>
+        <h2>🏗️ Architektur-Schichten im Überblick</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Schicht</th>
+                    <th>Funktion</th>
+                    <th>Entsprechung im Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Laufzeitumgebung</strong></td>
+                    <td>Lokale Ausführung, Performance und Bundling</td>
+                    <td>Bun JavaScript Runtime</td>
+                </tr>
+                <tr>
+                    <td><strong>Core Harness</strong></td>
+                    <td>Orchestrierung, Speichermanagement und Tool-Ausführung</td>
+                    <td>Über 1.900 TypeScript-Dateien</td>
+                </tr>
+                <tr>
+                    <td><strong>Sicherheit & Guardrails</strong></td>
+                    <td>Rechteverwaltung, Freigaben und Identitätsschutz</td>
+                    <td>Permission Tiers, Undercover Mode, DRM</td>
+                </tr>
+                <tr>
+                    <td><strong>Erweiterungen</strong></td>
+                    <td>Hintergrundüberwachung und Nutzerbindung</td>
+                    <td>KAIROS, Dream, Buddy-System</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+</body>
+</html>
+

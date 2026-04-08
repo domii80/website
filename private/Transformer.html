@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufbau moderner KIs: Transformer-Technologie</title>
+    <style>
+        /* --- Basis-Styling für Bildschirme --- */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            max-width: 210mm; /* DIN A4 Breite */
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-container {
+            background: #ffffff;
+            padding: 40px 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            font-size: 2.2em;
+            margin-top: 0;
+        }
+
+        h2 {
+            color: #2980b9;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p.intro {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Styling der einzelnen Konzepte */
+        .concept-box {
+            background: #fcfcfc;
+            border-left: 5px solid #3498db;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .concept-box ul {
+            margin-top: 10px;
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .concept-box li {
+            margin-bottom: 8px;
+        }
+
+        /* Zusammenfassungs-Box am Ende */
+        .summary-box {
+            background-color: #e8f4f8;
+            border: 2px dashed #2980b9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .summary-flow {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #d35400;
+            margin-top: 15px;
+            line-height: 1.8;
+            display: inline-block;
+        }
+
+        /* Formel-Styling via HTML/CSS */
+        .formula {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.2em;
+            text-align: center;
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #2c3e50;
+        }
+
+        .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 0.2em;
+        }
+
+        .fraction > span {
+            display: block;
+            padding: 0.1em;
+        }
+
+        .fraction span.fdn {
+            border-top: 1px solid #2c3e50;
+        }
+
+        /* --- Spezifische Einstellungen für den DIN A4 Druck --- */
+        @page {
+            size: A4;
+            margin: 20mm; /* Standard-Rand für DIN A4 */
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+                margin: 0;
+                max-width: 100%;
+            }
+
+            .page-container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .concept-box {
+                page-break-inside: avoid; /* Verhindert das Zerschneiden von Blöcken beim Seitenumbruch */
+                border-left: 4px solid #000; /* Besserer Kontrast in S/W */
+                background: transparent;
+            }
+
+            h1 {
+                border-bottom: 2px solid #000;
+                color: #000;
+            }
+
+            h2 {
+                color: #333;
+            }
+
+            .summary-box {
+                border: 2px solid #000;
+                background-color: transparent;
+                page-break-inside: avoid;
+            }
+
+            .formula {
+                border: 1px solid #ccc;
+                background: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+
+    <h1>Die Architektur moderner KIs</h1>
+    <p class="intro">
+        Ein strukturierter Überblick über die <strong>Transformer-Technologie</strong>. 
+        Die bahnbrechende Neuerung der Transformer (erstmals 2017 im Paper <em>"Attention Is All You Need"</em> vorgestellt) 
+        liegt im Verzicht auf rekurrente neuronale Netze (RNNs) zugunsten des reinen Einsatzes von 
+        Aufmerksamkeitsmechanismen (Attention). Dadurch wird die vollständige Parallelisierung bei der Verarbeitung von Sequenzen möglich.
+    </p>
+
+    <div class="concept-box">
+        <h2>1. Tokenisierung & Embeddings</h2>
+        <p>Bevor Text verarbeitet werden kann, muss er in den Vektorraum abgebildet werden.</p>
+        <ul>
+            <li><strong>Tokenization:</strong> Der Text wird in diskrete Einheiten (Tokens) zerlegt (oft via Byte-Pair Encoding oder WordPiece).</li>
+            <li><strong>Input Embeddings:</strong> Jedes Token wird über eine Embedding-Matrix auf einen hochdimensionalen, dichten Vektor <i>x</i> &isin; &#8477;<sup><i>d</i></sup> abgebildet. Dies erfasst die semantische Bedeutung des Tokens.</li>
+        </ul>
+    </div>
+
+    <div class="concept-box">
+        <h2>2. Positional Encoding</h2>
+        <p>Da Transformer keine rekurrente Struktur haben, verarbeiten sie alle Tokens simultan (Permutationsinvarianz). Dem Modell fehlt nativ das Konzept von Wortreihenfolgen.</p>
+        <ul>
+            <li><strong>Mechanismus:</strong> Dem Input-Embedding wird ein Vektor gleicher Dimension addiert, der die Position des Tokens codiert.</li>
+            <li><strong>Implementierung:</strong> Klassisch via Sinus- und Kosinus-Funktionen; modernere Modelle nutzen oft gelernte Embeddings oder <strong>RoPE (Rotary Positional Embeddings)</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="concept-box">
+        <h2>3. Scaled Dot-Product Attention (Self-Attention)</h2>
+        <p>Das absolute Herzstück des Transformers. Es gewichtet in Echtzeit den Kontext aller anderen Tokens für das aktuell betrachtete Token.</p>
+        <ul>
+            <li>Aus dem Embedding entstehen drei Vektoren: <strong>Query (Q)</strong> ("Was suche ich?"), <strong>Key (K)</strong> ("Was biete ich?") und <strong>Value (V)</strong> ("Was ist mein Inhalt?").</li>
+            <li><strong>Berechnung:</strong> Die Ähnlichkeit wird über das Skalarprodukt von Q und K bestimmt und skaliert.</li>
+        </ul>
+        <div class="formula">
+            Attention(Q, K, V) = softmax(
+            <div class="fraction">
+                <span>Q &middot; K<sup>T</sup></span>
+                <span class="fdn">&radic;d<sub>k</sub></span>
+            </div>
+            ) V
+        </div>
+    </div>
+
+    <div class="concept-box">
+        <h2>4. Multi-Head Attention (MHA)</h2>
+        <p>Anstatt Attention nur einmal auszuführen, passiert dies parallel in mehreren "Heads".</p>
+        <ul>
+            <li><strong>Mechanismus:</strong> Matrizen werden in kleinere Unterräume projiziert und die Attention parallel ausgeführt.</li>
+            <li><strong>Nutzen:</strong> Erlaubt dem Modell, gleichzeitig verschiedene Aspekte (z. B. Grammatik vs. Semantik) zu fokussieren. Ergebnisse werden am Ende konkateniert.</li>
+        </ul>
+    </div>
+
+    <div class="concept-box">
+        <h2>5. Position-wise Feed-Forward Networks (FFN)</h2>
+        <p>Nach der Attention durchläuft die Repräsentation jedes Tokens unabhängig ein klassisches Multi-Layer Perceptron.</p>
+        <ul>
+            <li><strong>Aufbau:</strong> Zwei lineare Transformationen mit einer nicht-linearen Aktivierungsfunktion (heute meist <strong>GELU</strong> oder <strong>SwiGLU</strong>).</li>
+            <li><strong>Zweck:</strong> Dient der Feature-Transformation und Verarbeitung der internen Repräsentationen des individuellen Tokens.</li>
+        </ul>
+    </div>
+
+    <div class="concept-box">
+        <h2>6. Residual Connections & Layer Normalization</h2>
+        <p>Standardtechniken aus dem Deep Learning stabilisieren das Training in tiefen Netzen.</p>
+        <ul>
+            <li><strong>Residual Connections (Add):</strong> Die Eingabe einer Sub-Schicht wird über einen Shortcut auf deren Ausgabe addiert, um den <em>Vanishing Gradient</em> zu verhindern.</li>
+            <li><strong>Layer Normalization (Norm):</strong> Die Werte werden anschließend über die Feature-Dimension normalisiert.</li>
+        </ul>
+        <div class="formula">
+            <i>x<sub>out</sub></i> = LayerNorm(<i>x</i> + Sublayer(<i>x</i>))
+        </div>
+    </div>
+
+    <div class="concept-box">
+        <h2>7. Masked Attention & Auto-Regressive Generierung</h2>
+        <p>Transformer teilen sich grob in zwei Hauptkategorien:</p>
+        <ul>
+            <li><strong>Encoder (z. B. BERT):</strong> Bidirektionale Attention. Jedes Token schaut "nach links" und "rechts". Ideal für Klassifizierung.</li>
+            <li><strong>Decoder (z. B. GPT, Gemini, LLaMA):</strong> Textgenerierung. Das Modell darf bei der Vorhersage nicht in die "Zukunft" schauen.</li>
+            <li><strong>Masking:</strong> Die obere rechte Dreiecksmatrix in der Attention-Berechnung wird mit &minus;&infin; maskiert, wodurch Informationsfluss aus zukünftigen Tokens blockiert wird.</li>
+        </ul>
+    </div>
+
+    <div class="summary-box">
+        <h3>Der Architektur-Flow eines modernen (Decoder-Only) LLMs</h3>
+        <p>Zusammenfassend durchläuft ein Prompt bei der Textgenerierung folgenden Pfad:</p>
+        <div class="summary-flow">
+            Eingabe-Text &rarr; Tokenisierung &rarr; Embeddings + Positional Encoding &rarr;<br>
+            [ N &times; Transformer-Blöcke: (Masked MHA &rarr; Add & Norm &rarr; FFN &rarr; Add & Norm) ] &rarr;<br>
+            Lineare Projektion &rarr; Softmax (Vorhersage nächstes Token)
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+

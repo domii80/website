@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const Database = require('better-sqlite3');
 const path = require('path');
@@ -168,16 +169,19 @@ const PRIVATE_DIR = path.join(__dirname, 'private');
 app.get('/marco', requireAuth, (req, res) => {
   const token = jwt.sign({ sub: req.user.sub, username: req.user.username }, JWT_SECRET, { expiresIn: '30d' });
   res.cookie('token', token, COOKIE_OPTIONS);
-  const onepagers = fs.readdirSync(PRIVATE_DIR)
-    .filter(f => f.endsWith('.html'))
-    .sort();
+  const onepagers = fs.existsSync(PRIVATE_DIR)
+    ? fs.readdirSync(PRIVATE_DIR, { withFileTypes: true })
+        .filter(dirent => dirent.isFile() && dirent.name.toLowerCase().endsWith('.html'))
+        .map(dirent => dirent.name)
+        .sort()
+    : [];
   res.render('marco', { title: 'Private Area', user: req.user, onepagers });
 });
 
 // Serve one-pagers — auth required, path traversal prevented
 app.get('/marco/onepager/:file', requireAuth, (req, res) => {
   const filename = path.basename(req.params.file);
-  if (!filename.endsWith('.html')) return res.status(400).send('Invalid file');
+  if (!filename.toLowerCase().endsWith('.html')) return res.status(400).send('Invalid file');
   const filePath = path.join(PRIVATE_DIR, filename);
   if (!fs.existsSync(filePath)) return res.status(404).render('404', { title: '404' });
   res.sendFile(filePath);
