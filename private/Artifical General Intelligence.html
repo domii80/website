@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>AGI Potential von Transformern</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        /* Grundeinstellungen für A4 */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Druck-Spezifikationen */
+        @media print {
+            body {
+                margin: 0;
+                background: white;
+            }
+            .page {
+                width: 100%;
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+
+        /* Header Bereich */
+        header {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 28pt;
+            margin: 0;
+            color: #111;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 14pt;
+            color: #0056b3;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+
+        .intro {
+            font-size: 11pt;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Grid Layout für die Argumente */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 25px;
+            row-gap: 30px;
+        }
+
+        .card {
+            break-inside: avoid;
+        }
+
+        .card h2 {
+            font-size: 13pt;
+            margin: 0 0 8px 0;
+            color: #0056b3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 4px solid #0056b3;
+            padding-left: 10px;
+        }
+
+        .card p {
+            font-size: 10.5pt;
+            line-height: 1.45;
+            margin: 0;
+            text-align: justify;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #222;
+        }
+
+        /* Footer */
+        footer {
+            position: absolute;
+            bottom: 20mm;
+            left: 20mm;
+            right: 20mm;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            font-size: 9pt;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <header>
+            <h1>Vom Token-Vorhersager zur AGI?</h1>
+            <div class="subtitle">Warum statistische Transformer das Potenzial zur allgemeinen Intelligenz besitzen</div>
+        </header>
+
+        <div class="intro">
+            Kritiker bezeichnen aktuelle KI-Modelle oft als „stochastische Papageien“. Doch führende KI-Forscher argumentieren, dass die Mechanismen der nächsten Token-Vorhersage (Next-Token Prediction) bei ausreichender Skalierung zwangsläufig zu einem tiefen Weltverständnis führen. Hier sind die sechs zentralen Argumente.
+        </div>
+
+        <div class="grid-container">
+            
+            <div class="card">
+                <h2>1. Kompressions-Hypothese</h2>
+                <p>
+                    <span class="highlight">Kompression impliziert Verständnis.</span> Um Daten (z. B. einen Roman) extrem effizient zu komprimieren, muss ein Modell die zugrundeliegenden Muster und Gesetzmäßigkeiten der Welt verinnerlicht haben. Wer den nächsten Satz in jedem Kontext perfekt vorhersagt, nutzt kein stures Auswendiglernen, sondern ein implizites Weltmodell.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>2. Skalierungsgesetze</h2>
+                <p>
+                    <span class="highlight">Leistung folgt Rechenleistung.</span> Empirische "Scaling Laws" zeigen, dass die Intelligenz von Modellen logarithmisch mit der Menge an Daten, Parametern und Rechenleistung steigt. Bisher ist keine Obergrenze in Sicht – mehr Ressourcen führen direkt zu intelligenterem Verhalten, ohne Architekturwechsel.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>3. Emergente Fähigkeiten</h2>
+                <p>
+                    <span class="highlight">More is different.</span> Ab einer kritischen Komplexität entwickeln Modelle Fähigkeiten, für die sie nie explizit trainiert wurden (z. B. logisches Schließen oder Programmieren). Diese qualitativen Sprünge deuten darauf hin, dass statistische Masse in generelle Lösungsstrategien umschlägt.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>4. Die „Bittere Lektion“</h2>
+                <p>
+                    <span class="highlight">Lernen schlägt Design.</span> Historisch haben generelle Lernalgorithmen, die massive Rechenleistung nutzen, immer gegen Systeme gewonnen, in denen Menschen versucht haben, Wissen fest zu kodieren. Die statistische Natur der Transformer ist kein Fehler, sondern der Schlüssel zur Bewältigung komplexer Realität.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>5. In-Context Learning</h2>
+                <p>
+                    <span class="highlight">Lernen zu lernen.</span> Modelle wenden neue Muster, die ihnen im Prompt gezeigt werden, sofort an. Das deutet darauf hin, dass sie nicht nur statische Fakten speichern, sondern interne Algorithmen zur Informationsverarbeitung entwickelt haben, die zur Laufzeit ausgeführt werden.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>6. Multimodale Erdung</h2>
+                <p>
+                    <span class="highlight">Von Text zur Realität.</span> Durch das Training mit Bildern, Audio und Video verlassen Modelle die reine Text-Statistik. Die Verknüpfung von Wort und visuellem Konzept „erdet“ (grounding) das Wissen und schafft ein robustes Verständnis der physischen Welt.
+                </p>
+            </div>
+
+        </div>
+
+        <footer>
+            <span>Thema: Künstliche Intelligenz / AGI</span>
+            <span>Generiert am: 04.02.2026</span>
+        </footer>
+    </div>
+
+</body>
+</html>
+

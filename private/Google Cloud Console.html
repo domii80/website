@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Cheat Sheet - Cloud Console & CLI</title>
+    <style>
+        :root {
+            --gcp-blue: #4285F4;
+            --gcp-red: #EA4335;
+            --gcp-yellow: #FBBC04;
+            --gcp-green: #34A853;
+            --text-dark: #202124;
+            --bg-light: #f8f9fa;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+        
+        body { background-color: white; color: var(--text-dark); margin: 0; padding: 0; }
+
+        /* DIN A4 Optimierung */
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 210mm; /* A4 Breite */
+            margin: auto;
+            padding: 10px;
+        }
+
+        header {
+            border-bottom: 3px solid var(--gcp-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 { color: var(--gcp-blue); margin: 0; font-size: 24px; }
+        h2 { border-left: 4px solid var(--gcp-blue); padding-left: 10px; font-size: 18px; margin-top: 20px; color: #333; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        code {
+            background: #f1f1f1;
+            padding: 2px 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 6px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th { background-color: var(--bg-light); }
+
+        .shortcut {
+            display: inline-block;
+            background: #333;
+            color: white;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 10px;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { -webkit-print-color-adjust: exact; }
+            .card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Google Cloud Platform (GCP) Quick Start</h1>
+        <div style="text-align: right; font-size: 12px;">Ref: 2026 | Cloud Console & gcloud CLI</div>
+    </header>
+
+    <div class="grid">
+        <div class="section">
+            <div class="card">
+                <h2>1. Cloud Console Navigation</h2>
+                <p>Erreichbar unter: <code>console.cloud.google.com</code></p>
+                <ul>
+                    <li><strong>Projekt-Selector:</strong> Oben links neben dem GCP-Logo. Jede Ressource muss einem Projekt zugeordnet sein.</li>
+                    <li><strong>Navigationsmenü:</strong> Das "Burger-Menü" (≡) öffnet alle Dienste (Compute, Storage, Networking).</li>
+                    <li><strong>Suchleiste (/) :</strong> Schnellster Weg zu Diensten (z.B. "IAM" oder "Bucket").</li>
+                </ul>
+                <table>
+                    <tr><th>Aktion</th><th>Tastenkürzel</th></tr>
+                    <tr><td>Suche fokussieren</td><td><span class="shortcut">/</span></td></tr>
+                    <tr><td>Cloud Shell öffnen</td><td><span class="shortcut">G</span> dann <span class="shortcut">S</span></td></tr>
+                    <tr><td>Dashboard anzeigen</td><td><span class="shortcut">G</span> dann <span class="shortcut">D</span></td></tr>
+                </ul>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>2. Wichtige Konzepte</h2>
+                <table>
+                    <tr><td><strong>Region</strong></td><td>Geografischer Ort (z.B. <code>europe-west3</code> Frankfurt).</td></tr>
+                    <tr><td><strong>Zone</strong></td><td>Isolierter Ort innerhalb einer Region (z.B. <code>-a</code>, <code>-b</code>).</td></tr>
+                    <tr><td><strong>IAM</strong></td><td>Identity & Access Management (Wer darf was?).</td></tr>
+                    <tr><td><strong>Quotas</strong></td><td>Limits für Ressourcen pro Projekt/Region.</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="card">
+                <h2>3. Cloud Shell & gcloud CLI</h2>
+                <p>Die Cloud Shell ist ein integriertes Terminal mit vorinstalliertem SDK.</p>
+                
+                <strong>Basis-Konfiguration:</strong>
+                <table>
+                    <tr><td>Login</td><td><code>gcloud auth login</code></td></tr>
+                    <tr><td>Projekt setzen</td><td><code>gcloud config set project [ID]</code></td></tr>
+                    <tr><td>Status prüfen</td><td><code>gcloud config list</code></td></tr>
+                </table>
+
+                <strong>Compute Engine (VMs):</strong>
+                <table>
+                    <tr><td>VM auflisten</td><td><code>gcloud compute instances list</code></td></tr>
+                    <tr><td>SSH Zugriff</td><td><code>gcloud compute ssh [NAME]</code></td></tr>
+                    <tr><td>VM Start/Stop</td><td><code>gcloud compute instances start [N]</code></td></tr>
+                </table>
+
+                <strong>Cloud Storage (gsutil):</strong>
+                <table>
+                    <tr><td>Bucket erstellen</td><td><code>gsutil mb gs://[NAME]</code></td></tr>
+                    <tr><td>Datei Upload</td><td><code>gsutil cp [FILE] gs://[BUCKET]</code></td></tr>
+                    <tr><td>Inhalt listen</td><td><code>gsutil ls gs://[BUCKET]</code></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h2>4. Best Practices & Troubleshooting</h2>
+        <div class="grid">
+            <div>
+                <strong>Sicherheit:</strong>
+                <ul style="font-size: 12px;">
+                    <li>Nutze das <strong>Principle of Least Privilege</strong> (IAM).</li>
+                    <li>Vermeide den <code>Owner</code>-Status für Service Accounts.</li>
+                    <li>Nutze <code>Infolayouts</code> zur Kostenüberwachung.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>Hilfe:</strong>
+                <ul style="font-size: 12px;">
+                    <li>Hilfe zu jedem Befehl: <code>gcloud [COMMAND] --help</code></li>
+                    <li>Aktivitäts-Log: In der Console unter "Activity" prüfen, warum Aktionen fehlgeschlagen sind.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        GCP OnePager - Optimiert für den Druck. Benutze "Hintergrundgrafiken drucken" in den Browsereinstellungen für beste Ergebnisse.
+    </footer>
+</div>
+
+</body>
+</html>

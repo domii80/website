@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv4 Adressierung - Kompaktwissen</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f4f7f6;
+            --text: #333;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* DIN A4 Simulation im Browser */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 20px auto;
+            background: var(--white);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 3px solid var(--accent);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 24pt;
+        }
+
+        h2 {
+            color: var(--accent);
+            border-left: 5px solid var(--accent);
+            padding-left: 10px;
+            margin-top: 25px;
+            font-size: 16pt;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 11pt;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 10pt;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .highlight-box {
+            background-color: #eef7fd;
+            border: 1px dashed var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 10pt;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 9pt;
+            color: #777;
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        /* Druck-Optimierung */
+        @media print {
+            body {
+                background: none;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+                height: auto;
+            }
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <header>
+            <h1>IPv4-Adressierung</h1>
+            <p>Struktur und funktionale Bereiche im Überblick</p>
+        </header>
+
+        <section>
+            <h2>1. Öffentliche Adressen (Public IPs)</h2>
+            <p>Weltweit einzigartige Adressen, die direkt im Internet geroutet werden. Unverzichtbar für Server, Webseiten und die Außenanbindung von Routern.</p>
+        </section>
+
+        <section>
+            <h2>2. Private Adressbereiche (RFC 1918)</h2>
+            <p>Reserviert für lokale Netzwerke (LAN). Diese Adressen werden im öffentlichen Internet nicht weitergeleitet und können in jedem privaten Netz neu vergeben werden.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bereich</th>
+                        <th>Klasse</th>
+                        <th>Typischer Einsatz</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10.0.0.0 – 10.255.255.255</td>
+                        <td>A</td>
+                        <td>Große Konzerne, Rechenzentren</td>
+                    </tr>
+                    <tr>
+                        <td>172.16.0.0 – 172.31.255.255</td>
+                        <td>B</td>
+                        <td>Mittlere Betriebe, Universitäten</td>
+                    </tr>
+                    <tr>
+                        <td>192.168.0.0 – 192.168.255.255</td>
+                        <td>C</td>
+                        <td>Heimnetzwerke, kleine Büros</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>3. Spezielle Funktionsbereiche</h2>
+            <p>Bestimmte Bereiche haben fest definierte technische Sonderaufgaben:</p>
+            <ul>
+                <li><strong>Loopback (127.0.0.0/8):</strong> Testadresse für das eigene Gerät (Localhost).</li>
+                <li><strong>APIPA (169.254.0.0/16):</strong> Selbstzugewiesene Adressen, wenn kein DHCP-Server erreichbar ist.</li>
+                <li><strong>Multicast (224.0.0.0 - 239.255.255.255):</strong> Versand von Datenpaketen an Gruppen von Empfängern gleichzeitig.</li>
+                <li><strong>Experimentell (240.0.0.0/4):</strong> Reserviert für zukünftige Forschung oder Testzwecke.</li>
+            </ul>
+        </section>
+
+        <div class="highlight-box">
+            <strong>Wichtiger technischer Hinweis:</strong><br>
+            In jedem IP-Netz sind die erste Adresse (Netz-ID) und die letzte Adresse (Broadcast) reserviert und können nicht an Endgeräte wie PCs oder Drucker vergeben werden.
+        </div>
+
+        <footer>
+            Erstellt als Übersicht zur IPv4-Adressierung &bull; DIN A4 Referenzblatt
+        </footer>
+    </div>
+
+</body>
+</html>

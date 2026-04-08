@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express + nginx – Authentifizierung</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:       #1a1a1f;
+    --ink-mid:   #3d3d4a;
+    --ink-soft:  #6b6b80;
+    --rule:      #d4d0c8;
+    --rule-light:#edeae3;
+    --cream:     #f9f7f2;
+    --accent:    #2a4a7f;
+    --accent2:   #8b3a2a;
+    --code-bg:   #f0ede6;
+    --tag-bg:    #e8e4f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 9.5pt;
+    line-height: 1.65;
+    color: var(--ink);
+    background: #e8e4dc;
+  }
+
+  /* ── PAGE SHELL ─────────────────────────────────── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: var(--cream);
+    padding: 18mm 16mm 16mm 16mm;
+    position: relative;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  header {
+    border-bottom: 2.5pt solid var(--ink);
+    padding-bottom: 5mm;
+    margin-bottom: 6mm;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 4mm;
+  }
+
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22pt;
+    line-height: 1.1;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+
+  .header-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 7.5pt;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .header-meta strong {
+    display: block;
+    color: var(--accent2);
+    font-weight: 500;
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 1mm;
+  }
+
+  /* ── SECTION ─────────────────────────────────────── */
+  section {
+    margin-bottom: 5.5mm;
+    break-inside: avoid;
+  }
+
+  .section-label {
+    font-size: 6pt;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 1.5mm;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 13.5pt;
+    line-height: 1.15;
+    color: var(--ink);
+    border-left: 3pt solid var(--accent);
+    padding-left: 3mm;
+    margin-bottom: 3mm;
+  }
+
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 9pt;
+    color: var(--accent);
+    margin-bottom: 1.5mm;
+    margin-top: 3mm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  p { margin-bottom: 1.5mm; color: var(--ink-mid); }
+
+  /* ── DIVIDER ─────────────────────────────────────── */
+  hr {
+    border: none;
+    border-top: 0.5pt solid var(--rule);
+    margin: 4.5mm 0;
+  }
+
+  /* ── TWO-COLUMN GRID ──────────────────────────────── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3.5mm;
+  }
+
+  /* ── CARD ─────────────────────────────────────────── */
+  .card {
+    background: white;
+    border: 0.75pt solid var(--rule);
+    border-radius: 1.5mm;
+    padding: 3mm 3.5mm;
+    break-inside: avoid;
+  }
+
+  .card-head {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 8.5pt;
+    color: var(--ink);
+    margin-bottom: 1.5mm;
+    padding-bottom: 1.5mm;
+    border-bottom: 0.5pt solid var(--rule-light);
+    display: flex;
+    align-items: center;
+    gap: 1.5mm;
+  }
+
+  .card-icon {
+    width: 4.5mm;
+    height: 4.5mm;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 6pt;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .card-icon.red  { background: var(--accent2); }
+  .card-icon.gray { background: var(--ink-soft); }
+
+  /* ── CODE ─────────────────────────────────────────── */
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 7.5pt;
+    background: var(--code-bg);
+    padding: 0.3mm 1mm;
+    border-radius: 0.8mm;
+    color: var(--accent2);
+  }
+
+  pre {
+    font-family: 'DM Mono', monospace;
+    font-size: 7pt;
+    background: var(--ink);
+    color: #c8d3e8;
+    padding: 3mm;
+    border-radius: 1.5mm;
+    margin: 2mm 0;
+    overflow: hidden;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  pre .c  { color: #6b8099; }   /* comment */
+  pre .k  { color: #82b4e8; }   /* keyword */
+  pre .s  { color: #a8d4a0; }   /* string */
+  pre .f  { color: #f0c080; }   /* function */
+  pre .n  { color: #e8c8a0; }   /* number/const */
+
+  /* ── TABLE ─────────────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.5pt;
+    margin: 2mm 0;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--ink-soft);
+    padding: 1.5mm 2mm;
+    border-bottom: 1pt solid var(--ink);
+    background: transparent;
+  }
+
+  td {
+    padding: 1.5mm 2mm;
+    border-bottom: 0.5pt solid var(--rule-light);
+    vertical-align: top;
+    color: var(--ink-mid);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td:first-child { font-family: 'DM Mono', monospace; font-size: 7pt; color: var(--accent); }
+
+  td.rec {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 7.5pt;
+    color: var(--ink);
+  }
+
+  /* ── FLOW DIAGRAM ─────────────────────────────────── */
+  .flow {
+    background: var(--ink);
+    color: #c8d3e8;
+    font-family: 'DM Mono', monospace;
+    font-size: 6.8pt;
+    padding: 3mm;
+    border-radius: 1.5mm;
+    line-height: 1.7;
+    white-space: pre;
+    margin: 2mm 0;
+  }
+
+  .flow .arrow { color: #82b4e8; }
+  .flow .box   { color: #f0c080; }
+  .flow .ok    { color: #a8d4a0; }
+  .flow .err   { color: #e87070; }
+
+  /* ── BADGE ────────────────────────────────────────── */
+  .badge {
+    display: inline-block;
+    font-size: 6pt;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 0.5mm 1.5mm;
+    border-radius: 0.8mm;
+    background: var(--tag-bg);
+    color: var(--accent);
+    margin-right: 0.8mm;
+  }
+
+  .badge.red { background: #f5e8e5; color: var(--accent2); }
+  .badge.gray { background: var(--rule-light); color: var(--ink-soft); }
+
+  /* ── NOTE BOX ─────────────────────────────────────── */
+  .note {
+    border-left: 2.5pt solid var(--accent2);
+    background: #faf5f0;
+    padding: 2mm 3mm;
+    border-radius: 0 1.2mm 1.2mm 0;
+    font-size: 7.5pt;
+    color: var(--ink-mid);
+    margin: 2mm 0;
+  }
+
+  .note strong { color: var(--accent2); font-weight: 500; }
+
+  /* ── TOPIC SEPARATOR ─────────────────────────────── */
+  .topic-sep {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    margin: 5mm 0 4mm;
+  }
+
+  .topic-sep span {
+    font-size: 6pt;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .topic-sep::before,
+  .topic-sep::after {
+    content: '';
+    flex: 1;
+    border-top: 0.5pt solid var(--rule);
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────── */
+  footer {
+    margin-top: 6mm;
+    padding-top: 3mm;
+    border-top: 1pt solid var(--ink);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    font-size: 6.5pt;
+    color: var(--ink-soft);
+  }
+
+  footer strong { color: var(--ink); font-weight: 500; }
+
+  /* ── PRINT ─────────────────────────────────────────── */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; }
+    pre, .flow, .card { break-inside: avoid; }
+  }
+
+  @media screen {
+    body { padding: 8mm 0; }
+    .page {
+      box-shadow:
+        0 2px 8px rgba(0,0,0,.08),
+        0 8px 32px rgba(0,0,0,.10);
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div>
+      <div class="header-title">
+        Authentifizierung mit<br>
+        <em>Express &amp; nginx</em>
+      </div>
+    </div>
+    <div class="header-meta">
+      <strong>Gesprächszusammenfassung</strong>
+      Express · nginx · Passport.js · JWT<br>
+      Session · Bearer Token · OAuth 2.0
+    </div>
+  </header>
+
+  <!-- THEMA 1 -->
+  <section>
+    <div class="section-label">Thema 01</div>
+    <h2>Login-Strategien für Express hinter nginx</h2>
+    <p>
+      In einem typischen Setup leitet nginx alle eingehenden Anfragen an Express weiter.
+      Die Authentifizierung kann dabei an verschiedenen Stellen ansetzen.
+    </p>
+
+    <div class="three-col" style="margin-top:3mm;">
+      <div class="card">
+        <div class="card-head"><span class="card-icon">1</span> In Express</div>
+        <p>Flexibelste Option. nginx leitet durch, Express übernimmt Login und Session-Verwaltung selbst. Unterstützt lokale Nutzer, OAuth und JWT.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon red">2</span> In nginx</div>
+        <p>Über <code>auth_basic</code> oder <code>auth_request</code>. Express bekommt nur authentifizierte Anfragen. Gut für interne Tools und Multi-Service-Setups.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon gray">3</span> OAuth / SSO</div>
+        <p>Login via Google, GitHub, Microsoft. Passport.js-Strategie handelt den OAuth-Flow ab; kein eigenes Passwort-Handling nötig.</p>
+      </div>
+    </div>
+
+    <h3>Entscheidungsmatrix</h3>
+    <table>
+      <thead>
+        <tr><th>Szenario</th><th>Empfehlung</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Klassische Web-App</td><td class="rec">Session + Passport (Local Strategy)</td></tr>
+        <tr><td>REST-API / SPA</td><td class="rec">JWT im HttpOnly-Cookie</td></tr>
+        <tr><td>Interne Tools schnell absichern</td><td class="rec">nginx Basic Auth</td></tr>
+        <tr><td>Mehrere Dienste zentral</td><td class="rec">nginx <code>auth_request</code></td></tr>
+        <tr><td>Soziales Login</td><td class="rec">OAuth 2.0 via Passport</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>nginx-Pflicht:</strong> Damit <code>secure</code>-Cookies hinter dem Proxy funktionieren, muss
+      <code>proxy_set_header X-Forwarded-Proto $scheme</code> gesetzt
+      und in Express <code>app.set('trust proxy', 1)</code> aktiviert sein.
+    </div>
+  </section>
+
+  <div class="topic-sep"><span>Thema 02</span></div>
+
+  <!-- THEMA 2 -->
+  <section>
+    <div class="section-label">Thema 02</div>
+    <h2>Session-Login – Code erklärt</h2>
+    <p>
+      Das Session-Verfahren speichert den eingeloggten Nutzer serverseitig.
+      Der Browser erhält nur eine bedeutungslose <strong>Session-ID als Cookie</strong>.
+    </p>
+
+    <div class="two-col" style="margin-top:3mm;">
+      <div>
+        <h3>Session-Middleware</h3>
+        <table>
+          <thead><tr><th>Option</th><th>Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td>secret</td><td class="rec">Signiert die Session-ID – verhindert Fälschungen</td></tr>
+            <tr><td>resave: false</td><td class="rec">Nur speichern bei Änderung</td></tr>
+            <tr><td>saveUninitialized: false</td><td class="rec">Keine leere Session für Gäste</td></tr>
+            <tr><td>httpOnly: true</td><td class="rec">Cookie für JS unsichtbar → schützt vor XSS</td></tr>
+            <tr><td>sameSite: strict</td><td class="rec">Kein Cross-Site-Mitsendem → CSRF-Schutz</td></tr>
+            <tr><td>secure: true</td><td class="rec">Nur über HTTPS übertragen</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:3mm;">Serialize / Deserialize</h3>
+        <p>
+          Nach dem Login speichert <code>serializeUser()</code> nur die
+          Nutzer-ID in der Session. Bei jedem Folge-Request lädt
+          <code>deserializeUser()</code> den aktuellen Datensatz aus der DB.
+          So wirken Änderungen (z. B. Kontosperrung) sofort.
+        </p>
+      </div>
+
+      <div>
+        <h3>Authentifizierungsablauf</h3>
+        <div class="flow"><span class="box">POST /login</span>  (username + password)
+  │
+  ▼
+<span class="f">passport.authenticate()</span>
+  │
+  ▼
+<span class="f">LocalStrategy</span>
+  DB-Lookup → bcrypt.compare()
+  │
+  ├─<span class="err">FALSCH</span>─▶ /login?error=1
+  │
+  └─<span class="ok">RICHTIG</span>─▶ serializeUser()
+              │
+              ▼
+         Session anlegen
+         Set-Cookie: id=abc123
+              │
+              ▼
+         <span class="box">/dashboard</span>
+
+<span class="box">Folge-Request</span> mit Cookie
+  │
+  ▼
+deserializeUser() → req.user = {…}
+  │
+  ▼
+<span class="ok">Route-Handler ausgeführt</span></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Produktions-Hinweis:</strong> <code>express-session</code> speichert Sessions standardmäßig im RAM.
+      Für Produktivbetrieb einen persistenten Store verwenden:
+      <code>connect-redis</code> oder <code>connect-pg-simple</code>.
+    </div>
+  </section>
+
+  <div class="topic-sep"><span>Thema 03</span></div>
+
+  <!-- THEMA 3 -->
+  <section>
+    <div class="section-label">Thema 03</div>
+    <h2>Bearer Token – Einordnung</h2>
+    <p>
+      Bearer Token ist kein eigenständiges Protokoll, sondern ein
+      <strong>Transportmechanismus</strong> (RFC 6750), ursprünglich Teil von OAuth 2.0,
+      aber davon unabhängig einsetzbar.
+    </p>
+
+    <pre><span class="c">// HTTP-Header mit Bearer Token</span>
+<span class="k">Authorization</span>: Bearer eyJhbGciOiJIUzI1NiJ9…</pre>
+
+    <div class="two-col" style="margin-top:2mm;">
+      <div>
+        <h3>Taxonomie</h3>
+        <div class="flow"><span class="box">Token-basierte Authentifizierung</span>
+  │
+  ├─ <span class="n">Opaque Tokens</span>
+  │   Zufallsstring, serverseitig
+  │   validiert (Datenbank-Lookup)
+  │
+  └─ <span class="n">Self-contained Tokens</span>
+      Tragen alle Infos selbst
+      │
+      └─ <span class="ok">JWT ← häufigste Umsetzung</span>
+          Header · Payload · Signatur</div>
+      </div>
+
+      <div>
+        <h3>Token-Verfahren im Vergleich</h3>
+        <table>
+          <thead><tr><th>Verfahren</th><th>Identitätsnachweis</th></tr></thead>
+          <tbody>
+            <tr><td>Bearer Token</td><td class="rec">Bloßer Besitz reicht</td></tr>
+            <tr><td>MAC Token</td><td class="rec">Token + Signatur der Request-Daten</td></tr>
+            <tr><td>mTLS</td><td class="rec">Client-Zertifikat + Token</td></tr>
+            <tr><td>DPoP</td><td class="rec">Nachweis des privaten Schlüssels</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>Einsatzgebiete</h3>
+    <div class="three-col" style="margin-top:1.5mm;">
+      <div class="card">
+        <div class="card-head"><span class="card-icon">A</span> OAuth 2.0 / OIDC</div>
+        <p>Bearer Token als Access Token nach Authorization Code, Client Credentials oder Device Flow.</p>
+        <p style="margin-top:1.5mm;"><span class="badge">RFC 6750</span><span class="badge gray">RFC 6749</span></p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon red">B</span> Stateless API (JWT)</div>
+        <p>Signiertes JWT als Bearer Token. Server prüft die Signatur lokal – kein Session-Store nötig.</p>
+        <p style="margin-top:1.5mm;"><span class="badge red">HS256</span><span class="badge red">RS256</span></p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon gray">C</span> Statische API-Keys</div>
+        <p>Vereinfachte Form: ein fixer Token-String, z. B. bei Stripe oder GitHub. Kein Ablaufdatum.</p>
+        <p style="margin-top:1.5mm;"><span class="badge gray">API-Key</span></p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:3mm;">
+      <strong>Sicherheit:</strong> Bearer Token ist das einfachste, aber auch schwächste Token-Verfahren –
+      wer das Token abfängt, hat vollen Zugriff. <strong>HTTPS ist daher zwingend.</strong>
+      Die eigentliche Sicherheit ergibt sich aus dem Inhalt (JWT-Signatur) oder dem Ausstellungsverfahren (OAuth-Flow).
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <strong>Express · nginx · Authentifizierung</strong> — Gesprächszusammenfassung
+    </div>
+    <div>
+      Session &nbsp;·&nbsp; Bearer Token &nbsp;·&nbsp; OAuth 2.0 &nbsp;·&nbsp; JWT
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
+

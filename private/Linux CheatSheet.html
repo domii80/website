@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Terminal One-Pager</title>
+    <style>
+        :root {
+            --bg-color: #1a1b26;
+            --card-bg: #24283b;
+            --text-main: #c0caf5;
+            --text-accent: #7aa2f7;
+            --cmd-color: #9ece6a;
+            --border-color: #414868;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 { margin: 0; color: var(--text-accent); }
+        p.subtitle { color: #565f89; margin-top: 5px; }
+
+        /* Search Bar */
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        input#search {
+            padding: 12px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 16px;
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Command Card */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: var(--text-accent);
+        }
+
+        .category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #bb9af7;
+            margin-bottom: 5px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .command-name {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            color: var(--text-accent);
+            font-weight: bold;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            margin: 8px 0;
+            color: #a9b1d6;
+        }
+
+        .example-box {
+            background-color: #15161e;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: var(--cmd-color);
+            border-left: 3px solid var(--text-accent);
+            word-break: break-all;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.8rem;
+            color: #565f89;
+        }
+
+        @media (max-width: 600px) {
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Linux Terminal Essentials</h1>
+    <p class="subtitle">The 50 most important commands you need to know.</p>
+</header>
+
+<div class="search-container">
+    <input type="text" id="search" placeholder="Search command (e.g., 'network', 'grep')..." onkeyup="filterCommands()">
+</div>
+
+<div class="grid-container" id="commandGrid">
+
+    <div class="card" data-cat="nav">
+        <span class="category">Navigation</span>
+        <div class="command-name">pwd</div>
+        <div class="description">Print Working Directory. Shows the path of the current directory.</div>
+        <div class="example-box">pwd</div>
+    </div>
+    <div class="card" data-cat="nav">
+        <span class="category">Navigation</span>
+        <div class="command-name">cd</div>
+        <div class="description">Change Directory. Moves to a different folder.</div>
+        <div class="example-box">cd /var/www/html</div>
+    </div>
+    <div class="card" data-cat="nav">
+        <span class="category">Navigation</span>
+        <div class="command-name">ls</div>
+        <div class="description">List contents of a directory.</div>
+        <div class="example-box">ls -la</div>
+    </div>
+
+    <div class="card" data-cat="file">
+        <span class="category">File Ops</span>
+        <div class="command-name">touch</div>
+        <div class="description">Create an empty file or update timestamp.</div>
+        <div class="example-box">touch newfile.txt</div>
+    </div>
+    <div class="card" data-cat="file">
+        <span class="category">File Ops</span>
+        <div class="command-name">mkdir</div>
+        <div class="description">Make Directory. Creates a new folder.</div>
+        <div class="example-box">mkdir -p projects/python</div>
+    </div>
+    <div class="card" data-cat="file">
+        <span class="category">File Ops</span>
+        <div class="command-name">cp</div>
+        <div class="description">Copy files or directories.</div>
+        <div class="example-box">cp -r source_folder/ backup/</div>
+    </div>
+    <div class="card" data-cat="file">
+        <span class="category">File Ops</span>
+        <div class="command-name">mv</div>
+        <div class="description">Move or Rename files.</div>
+        <div class="example-box">mv oldname.txt newname.txt</div>
+    </div>
+    <div class="card" data-cat="file">
+        <span class="category">File Ops</span>
+        <div class="command-name">rm</div>
+        <div class="description">Remove files or directories.</div>
+        <div class="example-box">rm -rf folder_name/</div>
+    </div>
+    <div class="card" data-cat="file">
+        <span class="category">File Ops</span>
+        <div class="command-name">file</div>
+        <div class="description">Determine file type.</div>
+        <div class="example-box">file archive.tar.gz</div>
+    </div>
+
+    <div class="card" data-cat="view">
+        <span class="category">Viewing</span>
+        <div class="command-name">cat</div>
+        <div class="description">Concatenate and display file content.</div>
+        <div class="example-box">cat config.json</div>
+    </div>
+    <div class="card" data-cat="view">
+        <span class="category">Viewing</span>
+        <div class="command-name">less</div>
+        <div class="description">View file content page by page.</div>
+        <div class="example-box">less large_log_file.log</div>
+    </div>
+    <div class="card" data-cat="view">
+        <span class="category">Viewing</span>
+        <div class="command-name">head</div>
+        <div class="description">Output the first part of a file (default 10 lines).</div>
+        <div class="example-box">head -n 5 file.txt</div>
+    </div>
+    <div class="card" data-cat="view">
+        <span class="category">Viewing</span>
+        <div class="command-name">tail</div>
+        <div class="description">Output the last part of a file. Good for logs.</div>
+        <div class="example-box">tail -f /var/log/syslog</div>
+    </div>
+
+    <div class="card" data-cat="search">
+        <span class="category">Search</span>
+        <div class="command-name">grep</div>
+        <div class="description">Search for a pattern in text/files.</div>
+        <div class="example-box">grep "error" server.log</div>
+    </div>
+    <div class="card" data-cat="search">
+        <span class="category">Search</span>
+        <div class="command-name">find</div>
+        <div class="description">Search for files in a directory hierarchy.</div>
+        <div class="example-box">find /home -name "*.py"</div>
+    </div>
+    <div class="card" data-cat="search">
+        <span class="category">Search</span>
+        <div class="command-name">locate</div>
+        <div class="description">Find files by name (uses a prebuilt database).</div>
+        <div class="example-box">locate nginx.conf</div>
+    </div>
+    <div class="card" data-cat="search">
+        <span class="category">Search</span>
+        <div class="command-name">diff</div>
+        <div class="description">Compare files line by line.</div>
+        <div class="example-box">diff file1.txt file2.txt</div>
+    </div>
+    <div class="card" data-cat="search">
+        <span class="category">Text Proc</span>
+        <div class="command-name">sed</div>
+        <div class="description">Stream Editor for filtering and transforming text.</div>
+        <div class="example-box">sed 's/old/new/g' file.txt</div>
+    </div>
+    <div class="card" data-cat="search">
+        <span class="category">Text Proc</span>
+        <div class="command-name">awk</div>
+        <div class="description">Pattern scanning and processing language.</div>
+        <div class="example-box">awk '{print $1}' data.csv</div>
+    </div>
+
+    <div class="card" data-cat="perm">
+        <span class="category">Permissions</span>
+        <div class="command-name">chmod</div>
+        <div class="description">Change file modes/permissions.</div>
+        <div class="example-box">chmod 755 script.sh</div>
+    </div>
+    <div class="card" data-cat="perm">
+        <span class="category">Permissions</span>
+        <div class="command-name">chown</div>
+        <div class="description">Change file owner and group.</div>
+        <div class="example-box">chown user:group file.txt</div>
+    </div>
+    <div class="card" data-cat="perm">
+        <span class="category">User</span>
+        <div class="command-name">sudo</div>
+        <div class="description">Execute a command as another user (usually root).</div>
+        <div class="example-box">sudo apt update</div>
+    </div>
+    <div class="card" data-cat="perm">
+        <span class="category">User</span>
+        <div class="command-name">su</div>
+        <div class="description">Substitute User. Switch to another user account.</div>
+        <div class="example-box">su - root</div>
+    </div>
+    <div class="card" data-cat="perm">
+        <span class="category">User</span>
+        <div class="command-name">whoami</div>
+        <div class="description">Print current user name.</div>
+        <div class="example-box">whoami</div>
+    </div>
+
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">uname</div>
+        <div class="description">Print system information.</div>
+        <div class="example-box">uname -a</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">hostname</div>
+        <div class="description">Show or set the system's host name.</div>
+        <div class="example-box">hostname -I</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">df</div>
+        <div class="description">Disk Free. Report file system disk space usage.</div>
+        <div class="example-box">df -h</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">du</div>
+        <div class="description">Disk Usage. Estimate file space usage.</div>
+        <div class="example-box">du -sh folder_name</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">free</div>
+        <div class="description">Display amount of free and used memory (RAM).</div>
+        <div class="example-box">free -h</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">top</div>
+        <div class="description">Display Linux tasks/processes.</div>
+        <div class="example-box">top</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">htop</div>
+        <div class="description">Interactive process viewer (better than top).</div>
+        <div class="example-box">htop</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">ps</div>
+        <div class="description">Report a snapshot of the current processes.</div>
+        <div class="example-box">ps aux | grep nginx</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">kill</div>
+        <div class="description">Terminate a process by PID.</div>
+        <div class="example-box">kill 1234</div>
+    </div>
+    <div class="card" data-cat="sys">
+        <span class="category">System</span>
+        <div class="command-name">shutdown</div>
+        <div class="description">Halt, power-off or reboot the machine.</div>
+        <div class="example-box">shutdown -h now</div>
+    </div>
+
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">ping</div>
+        <div class="description">Send ICMP ECHO_REQUEST to network hosts.</div>
+        <div class="example-box">ping google.com</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">ip</div>
+        <div class="description">Show / manipulate routing, devices, interfaces.</div>
+        <div class="example-box">ip addr show</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">curl</div>
+        <div class="description">Transfer data from or to a server (HTTP/FTP).</div>
+        <div class="example-box">curl -I https://example.com</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">wget</div>
+        <div class="description">Non-interactive network downloader.</div>
+        <div class="example-box">wget https://example.com/file.zip</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">ssh</div>
+        <div class="description">OpenSSH remote login client.</div>
+        <div class="example-box">ssh user@192.168.1.5</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">scp</div>
+        <div class="description">Secure copy (remote file copy).</div>
+        <div class="example-box">scp file.txt user@remote:/tmp</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">netstat</div>
+        <div class="description">Print network connections and stats.</div>
+        <div class="example-box">netstat -tulpn</div>
+    </div>
+    <div class="card" data-cat="net">
+        <span class="category">Network</span>
+        <div class="command-name">dig</div>
+        <div class="description">DNS lookup utility.</div>
+        <div class="example-box">dig google.com</div>
+    </div>
+
+    <div class="card" data-cat="arch">
+        <span class="category">Archives</span>
+        <div class="command-name">tar</div>
+        <div class="description">Store, list, and extract files in an archive.</div>
+        <div class="example-box">tar -xvf archive.tar.gz</div>
+    </div>
+    <div class="card" data-cat="arch">
+        <span class="category">Archives</span>
+        <div class="command-name">zip</div>
+        <div class="description">Package and compress (zip) files.</div>
+        <div class="example-box">zip -r mydata.zip folder/</div>
+    </div>
+    <div class="card" data-cat="arch">
+        <span class="category">Archives</span>
+        <div class="command-name">unzip</div>
+        <div class="description">List, test and extract compressed files in a ZIP.</div>
+        <div class="example-box">unzip mydata.zip</div>
+    </div>
+    <div class="card" data-cat="pkg">
+        <span class="category">Packages</span>
+        <div class="command-name">apt</div>
+        <div class="description">Package manager (Debian/Ubuntu).</div>
+        <div class="example-box">sudo apt install git</div>
+    </div>
+
+    <div class="card" data-cat="misc">
+        <span class="category">Editors</span>
+        <div class="command-name">nano</div>
+        <div class="description">Simple text editor.</div>
+        <div class="example-box">nano config.txt</div>
+    </div>
+    <div class="card" data-cat="misc">
+        <span class="category">Editors</span>
+        <div class="command-name">vim</div>
+        <div class="description">Vi IMproved, a programmer's text editor.</div>
+        <div class="example-box">vim script.py</div>
+    </div>
+    <div class="card" data-cat="misc">
+        <span class="category">History</span>
+        <div class="command-name">history</div>
+        <div class="description">Show the command history list.</div>
+        <div class="example-box">history | grep "ssh"</div>
+    </div>
+    <div class="card" data-cat="misc">
+        <span class="category">History</span>
+        <div class="command-name">clear</div>
+        <div class="description">Clear the terminal screen.</div>
+        <div class="example-box">clear</div>
+    </div>
+    <div class="card" data-cat="misc">
+        <span class="category">Help</span>
+        <div class="command-name">man</div>
+        <div class="description">An interface to the on-line reference manuals.</div>
+        <div class="example-box">man ls</div>
+    </div>
+    <div class="card" data-cat="misc">
+        <span class="category">Misc</span>
+        <div class="command-name">echo</div>
+        <div class="description">Display a line of text or variable.</div>
+        <div class="example-box">echo "Hello World" >> file.txt</div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Generated by AI • Linux One-Pager</p>
+</footer>
+
+<script>
+    function filterCommands() {
+        let input = document.getElementById('search');
+        let filter = input.value.toUpperCase();
+        let grid = document.getElementById('commandGrid');
+        let cards = grid.getElementsByClassName('card');
+
+        for (let i = 0; i < cards.length; i++) {
+            let cmdName = cards[i].getElementsByClassName('command-name')[0];
+            let desc = cards[i].getElementsByClassName('description')[0];
+            let txtValue = cmdName.textContent || cmdName.innerText;
+            let descValue = desc.textContent || desc.innerText;
+            
+            if (txtValue.toUpperCase().indexOf(filter) > -1 || descValue.toUpperCase().indexOf(filter) > -1) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

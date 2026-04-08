@@ -1,7 +1,17 @@
 <%- include('partials/header') %>
 <section>
   <h1>Private Area</h1>
-  <p>Welcome, <strong><%= user.username %></strong>.</p>
-  <p><a href="/logout">Logout</a></p>
+  <p>Welcome, <strong><%= user.username %></strong>. &nbsp;<a href="/logout">Logout</a></p>
+</section>
+
+<section>
+  <h2>One-Pagers</h2>
+  <div class="card-grid">
+    <% onepagers.forEach(file => { %>
+    <a href="/marco/onepager/<%= encodeURIComponent(file) %>" class="card" target="_blank">
+      <h3><%= file.replace(/\.html$/, '') %></h3>
+    </a>
+    <% }) %>
+  </div>
 </section>
 <%- include('partials/footer') %>

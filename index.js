@@ -161,11 +161,26 @@ app.post('/login', loginLimiter, async (req, res, next) => {
   }
 });
 
+const fs = require('fs');
+const PRIVATE_DIR = path.join(__dirname, 'private');
+
 // Private area — re-issue token on each visit (sliding expiry)
 app.get('/marco', requireAuth, (req, res) => {
   const token = jwt.sign({ sub: req.user.sub, username: req.user.username }, JWT_SECRET, { expiresIn: '30d' });
   res.cookie('token', token, COOKIE_OPTIONS);
-  res.render('marco', { title: 'Private Area', user: req.user });
+  const onepagers = fs.readdirSync(PRIVATE_DIR)
+    .filter(f => f.endsWith('.html'))
+    .sort();
+  res.render('marco', { title: 'Private Area', user: req.user, onepagers });
+});
+
+// Serve one-pagers — auth required, path traversal prevented
+app.get('/marco/onepager/:file', requireAuth, (req, res) => {
+  const filename = path.basename(req.params.file);
+  if (!filename.endsWith('.html')) return res.status(400).send('Invalid file');
+  const filePath = path.join(PRIVATE_DIR, filename);
+  if (!fs.existsSync(filePath)) return res.status(404).render('404', { title: '404' });
+  res.sendFile(filePath);
 });
 
 // Logout

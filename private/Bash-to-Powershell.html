@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>PowerShell für Unix/Bash Profis - Cheat Sheet</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.5; color: #222; margin: 0; padding: 20px; background-color: #f0f2f5; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #0078D4; border-bottom: 3px solid #0078D4; padding-bottom: 10px; margin-top: 0; }
+        h2 { color: #1e4471; background: #e7f3ff; padding: 8px 15px; border-radius: 4px; margin-top: 25px; font-size: 1.3em; }
+        h3 { color: #d11010; border-bottom: 1px dashed #ccc; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.95em; }
+        th, td { border: 1px solid #dee2e6; padding: 10px; text-align: left; }
+        th { background-color: #0078D4; color: white; font-weight: 600; }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        code { font-family: 'Cascadia Code', 'Consolas', monospace; background-color: #f1f1f1; padding: 3px 6px; border-radius: 3px; color: #000; font-size: 0.9em; }
+        .bash { color: #2c3e50; font-weight: bold; }
+        .pwsh { color: #005a9e; font-weight: bold; }
+        .highlight-box { background-color: #fff9db; border: 1px solid #ffe066; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; max-width: 100%; padding: 10px; }
+            h2 { background: #eee; border: 1px solid #ccc; color: black; }
+            .highlight-box { border: 2px solid #333; }
+            a { text-decoration: none; color: black; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PowerShell für Unix/Bash Entwickler</h1>
+    <p>Das wichtigste Konzept: <strong>Strings vs. Objekte</strong>. Während Bash Text durch Pipes schickt, reicht PowerShell echte .NET-Objekte mit Eigenschaften und Methoden weiter.</p>
+
+    <h2>1. Die Standard-Befehle (Gegenüberstellung)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Ziel</th>
+                <th>Bash Äquivalent</th>
+                <th>PowerShell Cmdlet (Alias)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Dateiinhalt anzeigen</td>
+                <td><code>cat file.txt</code></td>
+                <td><code>Get-Content</code> (cat, type)</td>
+            </tr>
+            <tr>
+                <td>Text suchen</td>
+                <td><code>grep "pattern"</code></td>
+                <td><code>Select-String "pattern"</code> (sls)</td>
+            </tr>
+            <tr>
+                <td>Prozesse filtern</td>
+                <td><code>ps aux | grep node</code></td>
+                <td><code>Get-Process node</code> (ps)</td>
+            </tr>
+            <tr>
+                <td>Dateien rekursiv finden</td>
+                <td><code>find . -name "*.js"</code></td>
+                <td><code>ls -Recurse -Filter *.js</code></td>
+            </tr>
+            <tr>
+                <td>Berechtigungen ändern</td>
+                <td><code>chmod 755 script.sh</code></td>
+                <td>Kein direktes Äquivalent (NTFS ACLs)</td>
+            </tr>
+            <tr>
+                <td>Web-Request</td>
+                <td><code>curl -X GET url</code></td>
+                <td><code>Invoke-RestMethod</code> (irm)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. Datenverarbeitung: Von Text zu Objekten</h2>
+    <p>In Bash nutzt du <code>awk</code>, <code>cut</code> und <code>sed</code>, um Spalten aus Text zu extrahieren. In PowerShell greifst du auf <strong>Properties</strong> zu.</p>
+    
+    <h3>Beispiel: Log-Parsing & Aggregation</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Logik</th>
+                <th>Bash (Text-basiert)</th>
+                <th>PowerShell (Objekt-basiert)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Spalte extrahieren</td>
+                <td><code>ls -l | awk '{print $5}'</code></td>
+                <td><code>ls | Select-Object Length</code></td>
+            </tr>
+            <tr>
+                <td>Sortieren</td>
+                <td><code>du -sk * | sort -rn</code></td>
+                <td><code>ls | sort Length -Descending</code></td>
+            </tr>
+            <tr>
+                <td>Zählen & Gruppieren</td>
+                <td><code>cat access.log | uniq -c</code></td>
+                <td><code>Get-Content access.log | Group-Object</code></td>
+            </tr>
+            <tr>
+                <td>Große Dateien finden</td>
+                <td><code>find . -size +100M</code></td>
+                <td><code>ls -r | ? Length -gt 100MB</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Der "Modern Stack": JSON, CSV & XML</h2>
+    <p>PowerShell konvertiert strukturierte Daten nativ in Objekte. Kein <code>jq</code> nötig!</p>
+    <div class="highlight-box">
+        <strong>JSON verarbeiten:</strong><br>
+        <code>$data = irm https://api.github.com/repos/PowerShell/PowerShell/releases | ConvertFrom-Json</code><br>
+        <code>$data[0].tag_name</code> <span style="color: #666;"># Direkter Zugriff auf Property</span>
+    </div>
+    <div class="highlight-box">
+        <strong>CSV in HTML umwandeln:</strong><br>
+        <code>Import-Csv data.csv | Where-Object Status -eq "Error" | ConvertTo-Html > report.html</code>
+    </div>
+
+    <h2>4. PowerShell Exklusiv-Features</h2>
+    <ul>
+        <li><strong><code>Get-Member (gm)</code>:</strong> Das wichtigste Cmdlet. Zeigt dir, was du mit einem Objekt machen kannst. <code>ls | gm</code></li>
+        <li><strong><code>-WhatIf</code>:</strong> Hänge dies an zerstörerische Befehle an (z.B. <code>rm * -WhatIf</code>), um zu sehen, was passieren <i>würde</i>.</li>
+        <li><strong><code>$LASTEXITCODE</code>:</strong> Entspricht <code>$?</code> in Bash für externe Programme.</li>
+        <li><strong>Pass-Thru:</strong> Viele Befehle (wie <code>Stop-Process</code>) geben standardmäßig nichts aus. Mit <code>-PassThru</code> erhältst du das Objekt zurück.</li>
+    </ul>
+
+    <h2>5. Scripting Syntax-Quickref</h2>
+    <table>
+        <tr>
+            <td><strong>Variable:</strong> <code>$name = "Wert"</code></td>
+            <td><strong>String Interpolation:</strong> <code>"Hallo $name"</code></td>
+        </tr>
+        <tr>
+            <td><strong>Array:</strong> <code>$a = 1,2,3</code></td>
+            <td><strong>Hash-Table (Dict):</strong> <code>$h = @{ID=1; Name="User"}</code></td>
+        </tr>
+        <tr>
+            <td><strong>If:</strong> <code>if ($a -eq $b) { ... }</code></td>
+            <td><strong>Vergleiche:</strong> <code>-eq, -ne, -gt, -lt, -like, -match</code></td>
+        </tr>
+    </table>
+
+    <footer style="margin-top: 30px; font-size: 0.85em; color: #666; text-align: center; border-top: 1px solid #eee; padding-top: 10px;">
+        PowerShell 7+ Cheat Sheet für Unix-Admins. Denke in Objekten, nicht in Zeilen!
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SystemVerilog Cheat Sheet & One-Pager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            color: #2980b9;
+            border-bottom: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        h3 {
+            color: #d35400;
+            margin-bottom: 5px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; width: 100%; max-width: none; padding: 20px; }
+            .grid { display: block; }
+            .section { page-break-inside: avoid; }
+            h1 { font-size: 24pt; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SystemVerilog Quick Reference</h1>
+
+    <div class="grid">
+        <div class="section">
+            <h2>1. Datentypen & Logik</h2>
+            <p>SystemVerilog führt den universellen Typ <code>logic</code> ein (ersetzt <code>reg</code> und <code>wire</code>).</p>
+            <table>
+                <tr><th>Typ</th><th>Beschreibung</th></tr>
+                <tr><td>bit</td><td>2-state (0, 1), standardmäßig 0</td></tr>
+                <tr><td>logic</td><td>4-state (0, 1, X, Z), standardmäßig X</td></tr>
+                <tr><td>int</td><td>32-bit signed integer</td></tr>
+                <tr><td>byte</td><td>8-bit signed integer</td></tr>
+            </table>
+            <pre><code>logic [7:0] data;  // 8-bit Vektor
+bit clk;           // 1-bit 2-state
+int i = 0;         // Ganzzahl</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>2. Modul Struktur</h2>
+            <pre><code>module my_design (
+    input  logic clk,
+    input  logic rst_n,
+    input  logic [7:0] d_in,
+    output logic [7:0] d_out
+);
+    // Interner Speicher
+    logic [7:0] internal_reg;
+
+    // Logik hier...
+
+endmodule</code></pre>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="grid">
+        <div class="section">
+            <h2>3. Prozedurale Blöcke</h2>
+            <p>Spezialisierte Blöcke für Synthese-Klarheit:</p>
+            <h3>Kombinatorik</h3>
+            <pre><code>always_comb begin
+    if (sel)
+        y = a;
+    else
+        y = b;
+end</code></pre>
+            <h3>Sequentiell (Register)</h3>
+            <pre><code>always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        q <= 8'h00;
+    else
+        q <= d_in;
+end</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>4. Interfaces</h2>
+            <p>Bündelt Signale für saubere Verbindungen.</p>
+            <pre><code>interface bus_if(input logic clk);
+    logic [7:0] addr;
+    logic [31:0] data;
+    logic enable;
+
+    modport master (output addr, data, enable);
+    modport slave  (input addr, data, enable);
+endinterface</code></pre>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="section">
+        <h2>5. Control Flow & Arrays</h2>
+        <div class="grid">
+            <div>
+                <h3>Enums & Structs</h3>
+                <pre><code>typedef enum logic [1:0] {
+    IDLE = 2'b00,
+    BUSY = 2'b01,
+    DONE = 2'b10
+} state_t;
+
+typedef struct {
+    logic [15:0] addr;
+    logic [7:0]  data;
+} packet_t;</code></pre>
+            </div>
+            <div>
+                <h3>Arrays</h3>
+                <pre><code>int array [0:7];      // Statisch
+int dynamic_arr [];   // Dynamisch
+initial begin
+    dynamic_arr = new[20];
+    foreach (array[i]) array[i] = i * 2;
+end</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6. Verification (Testbench) Basics</h2>
+        
+        <pre><code>initial begin
+    clk = 0;
+    forever #5 clk = ~clk; // Taktgenerator
+end
+
+initial begin
+    rst_n = 0;
+    #20 rst_n = 1;
+    // Assertion
+    assert (data_out == expected) 
+        else $error("Mismatch!");
+end</code></pre>
+    </div>
+
+    <footer style="margin-top: 30px; font-size: 0.8em; text-align: center; color: #7f8c8d;">
+        SystemVerilog One-Pager | Fokus: Synthese & Grundstrukturen
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>ST CheatSheet - Strukturierter Text</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.4; color: #333; margin: 20px; background-color: #f4f4f4; }
+        .page { background: white; padding: 30px; margin-bottom: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 900px; margin-left: auto; margin-right: auto; border-radius: 8px; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; text-align: center; margin-top: 0; }
+        h2 { color: #2980b9; border-bottom: 2px solid #eee; margin-top: 20px; }
+        h3 { color: #16a085; margin-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        code { background-color: #f8f8f8; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #d35400; font-weight: bold; }
+        .code-block { background-color: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; white-space: pre; margin: 10px 0; line-height: 1.2; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .keyword { color: #74b9ff; }
+        .comment { color: #636e72; font-style: italic; }
+        @media print {
+            body { background: white; margin: 0; }
+            .page { box-shadow: none; margin: 0; width: 100%; max-width: none; page-break-after: always; border-radius: 0; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <h1>Strukturierter Text (ST) CheatSheet</h1>
+    
+    <div class="grid">
+        <div>
+            <h2>1. Grundstruktur & Syntax</h2>
+            <ul>
+                <li><strong>Zuweisung:</strong> <code>:=</code> (z.B. <code>x := 10;</code>)</li>
+                <li><strong>Anweisungsende:</strong> Jede Zeile endet mit <code>;</code></li>
+                <li><strong>Kommentare:</strong>
+                    <ul>
+                        <li>Einzeilig/Block: <code>(* Kommentar *)</code></li>
+                        <li>In modernen Systemen: <code>// Kommentar</code></li>
+                    </ul>
+                </li>
+                <li><strong>Groß-/Kleinschreibung:</strong> Case-Insensitive (meistens).</li>
+            </ul>
+        </div>
+        <div>
+            <h2>2. Literale (Konstanten)</h2>
+            <table>
+                <tr><th>Typ</th><th>Beispiel</th></tr>
+                <tr><td>BOOL</td><td><code>TRUE</code>, <code>FALSE</code></td></tr>
+                <tr><td>INT</td><td><code>123</code>, <code>16#FF</code> (Hex), <code>2#101</code> (Bin)</td></tr>
+                <tr><td>REAL</td><td><code>12.34</code>, <code>1.5e3</code></td></tr>
+                <tr><td>STRING</td><td><code>'Text'</code></td></tr>
+                <tr><td>TIME</td><td><code>T#5s</code>, <code>T#2h15m</code></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <h2>3. Datentypen (Standard)</h2>
+    <table>
+        <tr><th>Kategorie</th><th>Typen</th><th>Bitbreite</th></tr>
+        <tr><td>Bit</td><td><code>BOOL</code> (0/1)</td><td>1 Bit</td></tr>
+        <tr><td>Ganzzahl</td><td><code>SINT, INT, DINT, LINT</code> (Vorzeichen) / <code>USINT, UINT, UDINT, ULINT</code></td><td>8, 16, 32, 64</td></tr>
+        <tr><td>Gleitkomma</td><td><code>REAL, LREAL</code></td><td>32, 64</td></tr>
+        <tr><td>Strings</td><td><code>STRING</code> (8-Bit), <code>WSTRING</code> (Unicode)</td><td>Var.</td></tr>
+        <tr><td>Zeit/Datum</td><td><code>TIME, DATE, TIME_OF_DAY (TOD), DATE_AND_TIME (DT)</code></td><td>Var.</td></tr>
+    </table>
+
+    <h2>4. Variablen-Deklaration</h2>
+    <div class="code-block">
+<span class="keyword">VAR</span>
+    iCounter   : <span class="keyword">INT</span> := 0; <span class="comment">(* Initialisierung *)</span>
+    rValue     : <span class="keyword">REAL</span>;
+    bStart     : <span class="keyword">BOOL</span>;
+    sName      : <span class="keyword">STRING</span>[20] := 'Maschine1';
+<span class="keyword">END_VAR</span>
+
+<span class="keyword">VAR_INPUT</span>    <span class="comment">(* Eingangsvariablen *)</span> <span class="keyword">END_VAR</span>
+<span class="keyword">VAR_OUTPUT</span>   <span class="comment">(* Ausgangsvariablen *)</span> <span class="keyword">END_VAR</span>
+<span class="keyword">VAR_IN_OUT</span>   <span class="comment">(* Durchgangsvariablen *)</span> <span class="keyword">END_VAR</span>
+<span class="keyword">VAR_GLOBAL</span>   <span class="comment">(* Globale Variablen *)</span> <span class="keyword">END_VAR</span>
+<span class="keyword">VAR_CONSTANT</span> <span class="comment">(* Konstanten *)</span> <span class="keyword">END_VAR</span></div>
+</div>
+
+<div class="page">
+    <h2>5. Operatoren (Priorität absteigend)</h2>
+    <table>
+        <tr><th>Operation</th><th>Symbol</th></tr>
+        <tr><td>Klammerung</td><td><code>(expression)</code></td></tr>
+        <tr><td>Funktionsaufruf</td><td><code>ABS(), SIN(), etc.</code></td></tr>
+        <tr><td>Potenzieren</td><td><code>**</code></td></tr>
+        <tr><td>Negieren / Komplement</td><td><code>-</code> / <code>NOT</code></td></tr>
+        <tr><td>Multiplikation / Division / Modulo</td><td><code>* , / , MOD</code></td></tr>
+        <tr><td>Addition / Subtraktion</td><td><code>+ , -</code></td></tr>
+        <tr><td>Vergleich</td><td><code>&lt;, &gt;, &lt;=, &gt;=</code></td></tr>
+        <tr><td>Gleichheit / Ungleichheit</td><td><code>= , &lt;&gt;</code></td></tr>
+        <tr><td>Logisch UND</td><td><code>AND, &</code></td></tr>
+        <tr><td>Logisch XOR</td><td><code>XOR</code></td></tr>
+        <tr><td>Logisch ODER</td><td><code>OR</code></td></tr>
+    </table>
+
+    <h2>6. Kontrollstrukturen</h2>
+    <h3>Bedingungen (IF / CASE)</h3>
+    <div class="grid">
+        <div class="code-block" style="font-size: 0.85em;">
+<span class="keyword">IF</span> bStart <span class="keyword">AND</span> NOT bError <span class="keyword">THEN</span>
+    iState := 1;
+<span class="keyword">ELSIF</span> bStop <span class="keyword">THEN</span>
+    iState := 0;
+<span class="keyword">ELSE</span>
+    iState := 99;
+<span class="keyword">END_IF;</span></div>
+        <div class="code-block" style="font-size: 0.85em;">
+<span class="keyword">CASE</span> iState <span class="keyword">OF</span>
+    1: <span class="comment">// Tu dies</span>
+    2, 3: <span class="comment">// Tu das</span>
+    4..10: <span class="comment">// Bereich</span>
+<span class="keyword">ELSE</span>
+    <span class="comment">// Standard</span>
+<span class="keyword">END_CASE;</span></div>
+    </div>
+
+    <h3>Schleifen (FOR / WHILE / REPEAT)</h3>
+    <div class="grid">
+        <div class="code-block" style="font-size: 0.85em;">
+<span class="comment">// Festgelegte Anzahl</span>
+<span class="keyword">FOR</span> i := 1 <span class="keyword">TO</span> 10 <span class="keyword">BY</span> 1 <span class="keyword">DO</span>
+    aBuffer[i] := 0;
+<span class="keyword">END_FOR;</span>
+
+<span class="keyword">WHILE</span> i < 100 <span class="keyword">DO</span>
+    i := i + 1;
+<span class="keyword">END_WHILE;</span></div>
+        <div class="code-block" style="font-size: 0.85em;">
+<span class="comment">// Mindestens einmal ausgeführt</span>
+<span class="keyword">REPEAT</span>
+    i := i - 1;
+<span class="keyword">UNTIL</span> i = 0
+<span class="keyword">END_REPEAT;</span>
+
+<span class="comment">// Kontrolle:</span>
+<span class="keyword">EXIT;</span> <span class="comment">// Schleife abbrechen</span></div>
+    </div>
+</div>
+
+<div class="page">
+    <h2>7. Komplexe Datentypen</h2>
+    <h3>Arrays (Felder)</h3>
+    <div class="code-block">
+<span class="keyword">VAR</span>
+    aNumbers : <span class="keyword">ARRAY</span>[0..9] <span class="keyword">OF INT</span> := [10(0)]; <span class="comment">// 10 Integers, alle 0</span>
+    aMatrix  : <span class="keyword">ARRAY</span>[1..3, 1..3] <span class="keyword">OF REAL</span>;     <span class="comment">// 2D Array</span>
+<span class="keyword">END_VAR</span>
+<span class="comment">// Zugriff:</span>
+aNumbers[2] := 50;</div>
+
+    <h3>Strukturen (DUT)</h3>
+    <div class="code-block">
+<span class="keyword">TYPE</span> ST_Motor :
+<span class="keyword">STRUCT</span>
+    bOn   : <span class="keyword">BOOL</span>;
+    rSpeed: <span class="keyword">REAL</span>;
+<span class="keyword">END_STRUCT</span>
+<span class="keyword">END_TYPE</span></div>
+
+    <h2>8. Funktionsbausteine (FB) Aufruf</h2>
+    <p>FBs müssen erst instanziiert werden (in <code>VAR</code>), bevor sie genutzt werden können.</p>
+    <div class="code-block">
+<span class="keyword">VAR</span>
+    fbTimer : <span class="keyword">TON</span>; <span class="comment">// Einschaltverzögerung instanziieren</span>
+<span class="keyword">END_VAR</span>
+
+<span class="comment">// Aufruf des FBs:</span>
+fbTimer(IN := bStart, PT := T#5s);
+bOutput := fbTimer.Q; <span class="comment">// Zugriff auf Ausgang</span></div>
+
+    <h2>9. Wichtige Standard-Funktionen</h2>
+    <table>
+        <tr><th>Typ</th><th>Funktion</th><th>Beschreibung</th></tr>
+        <tr><td>Mathematik</td><td><code>ABS(), SQRT(), SIN(), COS(), LN(), EXP()</code></td><td>Absolutwert, Wurzel, etc.</td></tr>
+        <tr><td>Begrenzung</td><td><code>LIMIT(Min, Val, Max)</code></td><td>Hält Wert in Grenzen.</td></tr>
+        <tr><td>Auswahl</td><td><code>SEL(G, In0, In1)</code></td><td>Wählt In1 wenn G=TRUE, sonst In0.</td></tr>
+        <tr><td>Maximum/Min</td><td><code>MAX(In1, In2, ...), MIN(...)</code></td><td>Größter/Kleinsteter Wert.</td></tr>
+        <tr><td>Konvertierung</td><td><code>INT_TO_REAL(), TIME_TO_INT()</code></td><td>Datentyp-Wandlung (Cast).</td></tr>
+    </table>
+
+    <div style="margin-top: 20px; font-size: 0.8em; text-align: center; color: #7f8c8d; border-top: 1px dashed #ccc; padding-top: 10px;">
+        Erstellt für Automatisierungstechniker | IEC 61131-3 Standard | Stand 2024
+    </div>
+</div>
+
+</body>
+</html>
+
